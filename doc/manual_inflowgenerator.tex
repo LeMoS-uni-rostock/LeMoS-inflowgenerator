@@ -1,0 +1,334 @@
+\documentclass{sd_report} 
+\usepackage{lscape}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage [autostyle]{csquotes}
+\usepackage{fp}
+\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+
+
+\newcommand{\menuitem}{\texttt}% Menu item formatting
+\newcommand{\menusep}{\ensuremath{\rightarrow}}% Menu separator
+\newcommand{\menuend}{\relax}% Menu end
+\makeatletter
+\newcommand{\menulist}[1]{% \menulist{<menu list>}
+  \def\menu@sep{\def\menu@sep{\menusep}}% https://tex.stackexchange.com/a/89187/5764
+  \renewcommand*{\do}[1]{\menu@sep\menuitem{##1}}%
+  \menulistparser{#1}% Process list
+  \menuend%
+}
+\makeatother
+\DeclareListParser{\menulistparser}{:}% List separator is ':'
+
+\MakeOuterQuote{"}
+
+\definecolor{antiquewhite}{rgb}{0.98, 0.92, 0.84}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\lstset{
+language=bash,
+basicstyle=\scriptsize\ttfamily,
+columns=fullflexible,breaklines=true,
+keywordstyle=\color{red},
+backgroundcolor=\color{antiquewhite},
+numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+numbersep=2pt,                   % how far the line-numbers are from the code
+numberstyle=\tiny\color{mygray},
+literate=%
+  {Ö}{{\"O}}1
+  {Ä}{{\"A}}1
+  {Ü}{{\"U}}1
+  {ß}{{\ss}}1
+  {ü}{{\"u}}1
+  {ä}{{\"a}}1
+  {ö}{{\"o}}1
+}
+
+\newenvironment {plist}
+                [0]
+                {\rowcolors{1}{gray!25}{gray!10}\begin{tabular}{p{0.35\linewidth}p{0.6\linewidth}}}
+                {\end{tabular}\rowcolors{0}{white}{white}}
+\newenvironment {plistc}
+                [1]
+                {\FPeval{\result}{0.95-#1}\rowcolors{1}{gray!25}{gray!10}\begin{tabular}{p{#1\linewidth}p{\result\linewidth}}}
+                {\end{tabular}\rowcolors{0}{white}{white}}
+
+\begin{document}
+
+\intro[01]
+{InsightCAE Inflow-Generator Add-on} % title (keep short)
+{hk} % author initals
+{\today} % date
+{202210041013} % doc no. scheme: YYYYMMDDHHMM (Y-Year, M-Month, D-Day, H-Hour, M-Minute)
+{inflowgen}
+
+\newcommand{\is}{InsightCAE\xspace}
+\newcommand{\sd}{silentdynamics GmbH\xspace}
+
+\section{Copyright}
+The program InsightCAE including all add-ons is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+\section{Disclaimer}
+This document and the InsightCAE program are subject to change without prior notice, due to the manufacturer’s continuous development program.
+
+InsightCAE has been developed and implemented with great care using algorithms that have been tested by \sd. Nevertheless, InsightCAE is based on third-party software, especially OpenFOAM and Code\_Aster, which are not developed by \sd itself and can be tested and checked by \sd only to a reasonable extent.  In order to ensure the reliability of InsightCAE for a certain application, it is therefore always necessary to validate the software by means of suitable test cases.
+
+Users are assumed to be
+knowledgeable in the information of the output reports. Users are assumed to
+recognize that the input data can have a significant effect on the solution and must be
+selected carefully. Users should have a thorough understanding of the relevant
+theoretical criteria.
+
+
+\section{Introduction}
+This document describes the usage of an add-on for the software \is.
+The add-on provides methods to generate synthetic turbulence at the inlet boundaries of turbulence-resolving simulations.
+
+This document extends the general documentation of \is.
+The general documentation can be found here:
+\url{https://github.com/hkroeger/insightcae-documentation/insightcae-manual.pdf}
+
+
+\section{Installation}
+The add-on can be placed in the source code tree of the \is base software.
+After recompiling, the analyses of this add-on will be available to the user.
+
+For each support customer, \sd provides a special binary package which contains the \is base software together with all requested add-ons and necessary third-party tools.
+
+%\subsection{Binary Install (Ubuntu)}
+%\sd provides a package repository for each support customer with the latest version of \is and the add-ons.
+%When this repository is included along with the public \sd repository for the \is base software, updates can be easily installed together with the usual system updates.
+%
+%For accessing the repository, \sd provides a username and a password.
+%Create a file named "/etc/apt/sources.list.d/silentdynamics.list" with the following content\footnote{Superuser rights are required for creating the file}:
+%\begin{lstlisting}
+%deb https://<username>:<password>@rostock.kroegeronline.net/customers/<username> focal main
+%\end{lstlisting}
+%where the distribution version name \texttt{focal} might need to be replaced with that of the current Ubuntu LTS distribution.
+%If not already done, install the public key for validation:
+%\begin{lstlisting}
+%$ sudo apt-key adv --fetch-keys http://downloads.silentdynamics.de/SD_REPOSITORIES_PUBLIC_KEY.gpg
+%\end{lstlisting}
+%After that, the add-on package can be installed by executing:
+%\begin{lstlisting}
+%$ sudo apt-get update
+%$ sudo apt-get install insightcae
+%\end{lstlisting}
+%
+%Since the repository is hosted in a http server, it is also possible to download the latest package files (*.deb) manually from the server and to copy and store them for offline usage.
+%
+%After the software is installed, the following line needs to be added to beginning of the file \texttt{\textasciitilde/.bashrc} for each user, who wants to use \is:
+%\begin{lstlisting}
+%source /opt/insightcae/bin/insight_setenv.sh
+%\end{lstlisting}
+%This will set up the environment for \is when a terminal is launched.
+
+\subsection{Source Code Repository}
+The current source code is maintained in a git-repository.
+When the repository is cloned, the whole version history can be inspected and previous states of the code can be restored.
+It is also possible to maintain own extensions and/or changes to the code while still being able to merge updates from \sd.
+Please refer to the official git documentation for an extensive coverage of the matter: \url{https://git-scm.com/doc}.
+
+ 
+To insert the add-on into the \is project, the source code has to be placed in the source tree of the \is base software.
+Thus change directory to the addons folder in the source tree and clone the repository there:
+\begin{lstlisting}
+$ cd /path/to/insight/src/addons
+$ git clone https://rostock.silentdynamics.de/git/silentdynamics/insight-inflowgenerator.git
+\end{lstlisting}
+When asked for username and password, the same credentials as for the binary repository above have to be used.
+
+After inserting the add-on source, change to the build directory and re-run cmake.
+It will detect the add-on code and produce the additional makefiles.
+Then rebuild the \is project by executing "make" in the build directory. This will compile the add-on.
+
+\subsection{Compiling the OpenFOAM Boundary Condition Library without the InsightCAE project}
+
+For users who don't want to take advantage of the numerous InsightCAE tools, it is possible to compile the inflow generator boundary condition library alone without building the entire InsightCAE project.
+Therefore, a configuration for OpenFOAM's wmake build system is provided (in a directory called Make).
+Although only the inflow generator BC library is build, still the while InsightCAE source tree needs to be present since there are some dependencies on other source code files from the InsightCAE project.
+
+To build the library containing the boundary condition, execute the following steps:
+\begin{enumerate}
+\item First check out the InsightCAE source tree:
+
+\begin{lstlisting}[language=bash]
+git clone -b next-release https://rostock.silentdynamics.de/git/silentdynamics/insight.git
+\end{lstlisting}
+
+Use the provided credentials to authenticate with silentdynamics' git repository server.
+
+\item then change into the add-ons subdirectory and place the inflow generator code there:
+
+\begin{lstlisting}[language=bash]
+cd insight/src/addons
+\end{lstlisting}
+
+\item clone the inflow generator add-on there
+
+\begin{lstlisting}[language=bash]
+git clone -b master https://rostock.silentdynamics.de/git/silentdynamics/insight-inflowgenerator.git
+\end{lstlisting}
+
+\item change further down into the inflow generator BC library source directory:
+
+\begin{lstlisting}[language=bash]
+cd insight-inflowgenerator/extensions/openfoam/inflowGeneratorBC
+\end{lstlisting}
+
+\item there, one or more wmake configurations are present. First select and check a configuration (see section \ref{sec:inflw_wmake}). Then build the library by executing
+
+\begin{lstlisting}[language=bash]
+wmake libso
+\end{lstlisting}
+
+\end{enumerate}
+
+\subsubsection{Adapt wmake Configuration}
+\label{sec:inflw_wmake}
+
+Several predefined wmake configurations can be present in the source directory of the BC library.
+They are stored in respective directories which names are of the pattern \texttt{Make.*}.
+
+One of the configurations can be selected by creating a symbolic link to one of the predefined directories. For example:
+
+\begin{lstlisting}[language=bash]
+ln -s Make.OFesi2106_Mint_Debian_Edition5 Make
+\end{lstlisting}
+
+The following items of the selected wmake configuration should be checked:
+\begin{itemize}
+\item the version of OpenFOAM with which the library is to be compiled.
+
+In \texttt{Make/options}, there is a line of the pattern:
+\begin{lstlisting}[language=c++]
+    -DOF_VERSION=060505 \
+\end{lstlisting}
+
+The number behind the preprocessor symbol \texttt{OF\_VERSION} can be changed switch compatibility with a different OpenFOAM version. The following choices are currently supported:
+
+\begin{tabular}{lccl}
+\hline
+Label & OpenFOAM version & \texttt{OF\_VERSION} value & fork\\
+\hline
+OF16ext &	1.6.0	& 010600	&extend\\
+fx31	&	1.6.1	& 010601	&extend\\
+fx32	&	1.6.2	& 010602	&extend\\
+fx30	&	1.6.3	& 010603&	extend\\
+fx41	&	1.6.4	& 010604&	extend\\
+of21x	&	2.1.0	& 020100&	vanilla\\
+of22x	&	2.2.0	& 020200&	vanilla\\
+of22eng	& 2.2.0	& 020200	&engys\\
+of23x	&	2.3.0	&020300	&vanilla\\
+of24x	&	2.4.0	&020400	&vanilla\\
+of301	&	3.0.1	&030001	&vanilla\\
+ofplus	&	4.0.0	&040000	&esi\\
+of1806	&	6.0.0	&060000	&esi\\
+of1906	&	6.5.0	&060500	&esi\\
+of2112	&	6.5.5	&060505	&esi\\
+ofdev	&	7.0.0	&070000	&vanilla\\
+\hline
+\end{tabular}
+
+\item the include directory for VTK should be added with a \texttt{-I} option to \texttt{EXE\_INC}. For example:
+
+\begin{lstlisting}[language=c++]
+   -I/usr/include/vtk-9.0 \
+\end{lstlisting}
+
+\item the VTK libraries should be added with appropriate \texttt{-l} options to \texttt{LIB\_LIBS}. For example:
+
+\begin{lstlisting}[language=c++]
+    -lvtkIOLegacy-9.0 -lvtkCommonSystem-9.0 \
+\end{lstlisting}
+
+\item likewise, the libraries for Armadillo should be added with appropriate \texttt{-l} options to \texttt{LIB\_LIBS}. For example:
+
+\begin{lstlisting}[language=c++]
+    -larmadillo -lgsl -lgslcblas \
+\end{lstlisting}
+
+\item the library output path in Make/files. By default, the library is put into the user's own library directory (FOAM\_USER\_LIBBIN):
+
+\begin{lstlisting}[language=c++]
+LIB = $(FOAM_USER_LIBBIN)/libinflowGeneratorBC
+\end{lstlisting}
+
+\end{itemize}
+
+\section{Using the Inflow Generator Boundary Condition in OpenFOAM Cases}
+
+To use the inflow generator boundary condition in an OpenFOAM case, these two steps are required:
+\begin{enumerate}
+\item ensure that the solver executable loads the shared library containing the boundary condition code. Therefore, the appropriate library should be added to the list \texttt{libs} in \texttt{system/controlDict}. For example:
+
+\begin{lstlisting}[language=c++]
+libs (  
+        "libinflowGeneratorBC.so"
+     );
+\end{lstlisting}
+
+\item Then add an appropriate entry in the \texttt{boundaryField} section of the velocity field file \texttt{0/U}. For example:
+
+\begin{lstlisting}[language=c++]
+    inlet
+    {
+       type            inflowGenerator<hatSpot>;
+       //type            inflowGenerator<anisotropicVortonAnalytic>;
+       //type            inflowGenerator<anisotropicVortonNumerical>;
+       //type            inflowGenerator<anisotropicVortonPseudoInverse>;
+
+        UMeanSource     linearProfile (0 0 0) (0 0 1) "$FOAM_CASE/Umean.dat";
+        RSource         linearProfile (0 0 0) (0 0 1) "$FOAM_CASE/R_ij.dat";
+        LSource         linearProfile (0 0 0) (0 0 1) "$FOAM_CASE/L_ii.dat";
+        calibrationFactorSource  uniform  1;
+        scaleToMassFlow true;
+        value           uniform  (0 0 0);
+    }
+\end{lstlisting}
+
+The following configuration keywords need to be specified:
+\begin{itemize}
+\item the spot type is selected by the keyword in the angular brackets after the keyword \texttt{inflowGenerator},
+\item the mean velocity is provided by the statement after the keyword \texttt{UMeanSource}.
+
+The syntax used for all the \texttt{*Source} keywords is described in the general InsightCAE manual in section 8.1.1.
+\item The reynolds stress is provided by the statement after the keyword \texttt{RSource},
+\item the length scales are provided by the statement after the keyword \texttt{LSource}. Three length scales need to be provided. The first is the length along the largest principal direction of the reynolds stress tensor, the second along the second largest principal direction and so on.
+\item An optional calibration factor can be specified by the keyword \texttt{calibrationFactorSource}.
+\item Finally, the fluctuations can be scaled such that the integral of the velocity in patch-normal direction is always identical to that of the prescribed mean velocity field. This can be switch on and off by the \texttt{scaleToMassFlow}.
+\end{itemize}
+\end{enumerate}
+
+\section{Getting Help and Reporting Errors}
+
+In the case of problems with our software, or if you have proposals for new features or improvement, please create a ticket in our issue tracker at \url{https://github.com/hkroeger/insightcae/issues}. In the case of errors, please provide as much of the following informations, as possible:
+
+\begin{itemize}
+\item short description of the problem
+
+\item log file
+
+Either save it from the workbench (button "Save as..." in the "Output" tab) or copy the output from the console and paste into a file.
+
+\item Input file (*.ist)
+
+\item The geometry and further referenced input files, if your data protection rules allow so.
+\end{itemize}
+
+Alternatively, you can of course email or call your \sd contact person.
+
+
+
+\end{document}
