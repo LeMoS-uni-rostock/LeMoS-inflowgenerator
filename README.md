@@ -6,7 +6,7 @@ Password: af34ed12
 
 
 1.) checkout InsightCAE: 
-    git clone https://github.com/LeMoS-HRO/insightcae.git
+    git clone https://github.com/LeMoS-uni-rostock/insightcae.git
     
 2.) change to correct branch
     git checkout next-release
@@ -18,7 +18,7 @@ Password: af34ed12
     cd src/addons
 
 5.) downlaod add-on: 
-    git clone https://github.com/LeMoS-HRO/insight-inflowgenerator.git
+    git clone https://github.com/LeMoS-uni-rostock/LeMoS-inflowgenerator.git
 
 6.) make sure that you are in branch master
     cd insight-inflowgenerator/
