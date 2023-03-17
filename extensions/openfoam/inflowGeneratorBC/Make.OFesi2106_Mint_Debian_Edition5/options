@@ -1,0 +1,19 @@
+EXE_INC = \
+    -DOF_VERSION=060505 \
+    -I/usr/include \
+    -I../../../../../toolkit \
+    -I../../../../../extensions/openfoam/aux/globalPatch \
+    -I../../../../../extensions/openfoam/aux/fieldDataProvider \
+    -I../../../../../extensions/openfoam/aux/uniof \
+    -I/usr/include/vtk-9.0 \
+    -I$(LIB_SRC)/surfMesh/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/fvOptions/lnInclude
+
+LIB_LIBS = \
+    -lOpenFOAM \
+    -lfiniteVolume \
+    -lgsl -lgslcblas \
+    -lvtkIOLegacy-9.0 -lvtkCommonSystem-9.0 -larmadillo

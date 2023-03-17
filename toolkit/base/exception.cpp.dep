@@ -1,0 +1,8 @@
+$(OBJECTS_DIR)/../../../../../toolkit/base/exception.cpp.dep: \
+../../../../../toolkit/base/exception.cpp \
+../../../../../toolkit/base/exception.h \
+toolkit_export.h \
+/usr/include/boost/stacktrace.hpp \
+/usr/include/boost/algorithm/string.hpp \
+
+#END

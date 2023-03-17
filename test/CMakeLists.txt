@@ -1,0 +1,3 @@
+add_subdirectory(inflowGeneratorBC)
+
+setup_test_OF(inflowchannel_parallel run_inflowchannel_parallel.sh)

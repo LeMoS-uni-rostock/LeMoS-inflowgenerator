@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<analysis name="Channel Flow Test Case (Inflow Generator)"/>
+	<subset name="eval">
+		<bool name="reportdicts" value="1"/>
+	</subset>
+	<subset name="fluid">
+		<double name="nu" value="1.8e-05"/>
+		<selection name="turbulenceModel" value="dynSmagorinsky"/>
+	</subset>
+	<subset name="geometry">
+		<double name="B" value="4.1900000000000004"/>
+		<double name="H" value="2"/>
+		<double name="L" value="12.56"/>
+	</subset>
+	<subset name="inflow">
+		<selectableSubset name="turbulence" value="inflowGenerator">
+			<subset name="L">
+				<selectableSubset name="fielddata" value="uniform">
+					<array name="values">
+						<subset name="default">
+							<double name="time" value="0"/>
+							<vector name="value" value="1 0 0"/>
+						</subset>
+						<subset name="0">
+							<double name="time" value="0"/>
+							<vector name="value" value="0.1 0.1 0.1"/>
+						</subset>
+					</array>
+				</selectableSubset>
+			</subset>
+			<subset name="R">
+				<selectableSubset name="fielddata" value="uniform">
+					<array name="values">
+						<subset name="default">
+							<double name="time" value="0"/>
+							<vector name="value" value="1 0 0"/>
+						</subset>
+						<subset name="0">
+							<double name="time" value="0"/>
+							<vector name="value" value="7 0 0 1 0 2"/>
+						</subset>
+					</array>
+				</selectableSubset>
+			</subset>
+			<selection name="type" value="hatSpot"/>
+			<bool name="uniformConvection" value="0"/>
+			<double name="volexcess" value="2"/>
+		</selectableSubset>
+		<subset name="umean">
+			<selectableSubset name="fielddata" value="uniform">
+				<array name="values">
+					<subset name="default">
+						<double name="time" value="0"/>
+						<vector name="value" value="1 0 0"/>
+					</subset>
+					<subset name="0">
+						<double name="time" value="0"/>
+						<vector name="value" value="17 0 0"/>
+					</subset>
+				</array>
+			</selectableSubset>
+		</subset>
+	</subset>
+	<subset name="mesh">
+		<double name="dxplus" value="400"/>
+		<double name="dzplus" value="150"/>
+		<bool name="fixbuf" value="0"/>
+		<double name="layerratio" value="1.1000000000000001"/>
+		<path name="linkmesh" value=""/>
+		<int name="nh" value="12"/>
+		<int name="nl" value="3"/>
+		<bool name="twod" value="0"/>
+		<double name="ypluswall" value="20"/>
+	</subset>
+	<subset name="operation">
+		<double name="Re_tau" value="395"/>
+		<double name="y0" value="0"/>
+	</subset>
+	<subset name="run">
+		<string name="OFEname" value="OF23x"/>
+		<double name="deltaT" value="1"/>
+		<double name="endTime" value="1000"/>
+		<bool name="eval2" value="0"/>
+		<bool name="evaluateonly" value="0"/>
+		<bool name="filteredconvection" value="0"/>
+		<string name="machine" value=""/>
+		<path name="mapFrom" value=""/>
+		<int name="np" value="3"/>
+		<bool name="potentialinit" value="0"/>
+		<selectableSubset name="regime" value="unsteady">
+			<double name="inittime" value="1"/>
+			<double name="mean2time" value="1"/>
+			<double name="meantime" value="1"/>
+		</selectableSubset>
+	</subset>
+</root>
+
+

@@ -1,0 +1,16 @@
+
+../../../../../toolkit/base/units.cpp
+../../../../../toolkit/base/exception.cpp
+../../../../../toolkit/base/linearalgebra.cpp
+../../../../../extensions/openfoam/aux/globalPatch/globalPatch.C
+../../../../../extensions/openfoam/aux/fieldDataProvider/vectorspacebase.cpp
+../../../../../extensions/openfoam/aux/fieldDataProvider/fielddataproviders.cpp
+
+boostRandomGen.C
+vortonqueue.cpp
+inflowGeneratorFvPatchVectorFieldFwd.C
+
+turbulentStructures/turbulentstructure.cpp
+turbulentStructures/anisotropicvorton.cpp
+
+LIB = $(FOAM_USER_LIBBIN)/libinflowGeneratorBC

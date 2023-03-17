@@ -1,0 +1,9 @@
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+setup_test_OF(pimpleFoam_pipe_inflow runOFTest.sh)
+
+add_executable(test_inflowGeneratorParallelization test_inflowGeneratorParallelization.cpp)
+linkToolkitVtk(test_inflowGeneratorParallelization Offscreen)
+add_test(NAME test_inflowGeneratorParallelization COMMAND test_inflowGeneratorParallelization)

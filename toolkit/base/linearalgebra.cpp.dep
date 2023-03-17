@@ -1,0 +1,21 @@
+$(OBJECTS_DIR)/../../../../../toolkit/base/linearalgebra.cpp.dep: \
+../../../../../toolkit/base/linearalgebra.cpp \
+../../../../../toolkit/base/linearalgebra.h \
+/usr/include/gsl/gsl_multimin.h \
+/usr/include/gsl/gsl_integration.h \
+/usr/include/boost/optional.hpp \
+/usr/include/boost/optional/optional.hpp \
+/usr/include/boost/ptr_container/ptr_vector.hpp \
+../../../../../toolkit/base/exception.h \
+toolkit_export.h \
+/usr/include/boost/lexical_cast.hpp \
+/usr/include/boost/tuple/tuple.hpp \
+/usr/include/boost/format.hpp \
+../../../../../toolkit/base/units.h \
+/usr/include/boost/units/systems/si/pressure.hpp \
+/usr/include/boost/units/systems/si/prefixes.hpp \
+/usr/include/boost/units/physical_dimensions.hpp \
+/usr/include/boost/units/systems/si/codata/physico-chemical_constants.hpp \
+../../../../../toolkit/base/linearalgebra.h \
+
+#END
