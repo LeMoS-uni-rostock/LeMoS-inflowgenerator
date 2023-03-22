@@ -1,94 +1,105 @@
 # LeMoS-inflowgenerator
 
+At first you have to download an addon folder where necessary libraries for the inflow generator are stored. In the future this will be changed to come in only one item.
 
-User name: lemos
-Password: af34ed12
+User name: lemos, Password: af34ed12
 
+# Workstation installation
 
-1.) checkout InsightCAE: 
+1.) check if you have a user-defined OpenFOAM folder: "echo $WM_PROJECT_USER_DIR" should give something like "/home/userName/OpenFOAM/userName-OFxxx"
+    --> if it does not exist create it (please refer to the OpenFOAM installation documentation)
+    
+2.) change into your user-defined OpenFOAM directory
+
+3.) clone into the path of the addon folder: 
     git clone https://github.com/LeMoS-uni-rostock/insightcae.git
     
-2.) change to correct branch
+4.) change directory into the newly created folder "insightcae"
+    
+5.) change to correct branch
     git checkout next-release
 
-3.) pull the file of the correct branch
+6.) pull the file of the correct branch
     git pull    
 
-4.) change in directory src/addons
+7.) change in directory src/addons
     cd src/addons
 
-5.) downlaod add-on: 
+8.) download add-on: 
     git clone https://github.com/LeMoS-uni-rostock/LeMoS-inflowgenerator.git
 
-6.) make sure that you are in branch master
-    cd insight-inflowgenerator/
+9.) change directory to the folder "LeMoS-inflowgenerator" and check the branch
+    cd LeMoS-inflowgenerator/
     git branch 
-    git checkout master
+    git checkout main
+    
+---------------------------------------------------------------------------------
 
-7.) change directory to extensions/openfoam/inflowGeneratorBC
-    cd extensions/openfoam/inflowGeneratorBC
+10.) cd extensions/openfoam/inflowGeneratorBC/inflowGeneratorBC/Make.OFxxxx_[...]
 
-do not change nayting in files 
-change DOR_VERSION according to this table 
-OF16ext    1.6.0    010600    extend
-fx31        1.6.1    010601    extend
-fx32        1.6.2    010602    extend
-fx30        1.6.3    010603    extend
-fx41        1.6.4    010604    extend
-of21x        2.1.0    020100    vanilla
-of22x        2.2.0    020200    vanilla
-of22eng    2.2.0    020200    engys
-of23x        2.3.0    020300    vanilla
-of24x        2.4.0    020400    vanilla
-of301        3.0.1    030001    vanilla
-ofplus        4.0.0    040000    esi
-of1806        6.0.0    060000    esi
-of1906        6.5.0    060500    esi
-of2112        6.5.5    060505    esi
-ofdev        7.0.0    070000    vanilla
+10.1) do not change anything in files
 
-Change VTK version according to your installation (recommended version )
+10.2) sudo apt update
+     sudo apt upgrade
 
-if you dont have  gsl and vtk library
+10.3) make sure "armadillo" is installed
 
-sudo apt update
-sudo apt upgrade
+10.4) find out which vtk-version you have (e.g. with Synaptic Package Manager)
+    make sure "libvtkx-dev" and "libgsl-dev" are installed
+    
+10.5) in "options" change
+    line 8: change according to your vtk version
+    line 19: change according to your vtk version
 
-(synaptic will show GUI of installation packages)
-(if you have python3-paraview you should remove it)
+10.6) in "options" change DOR_VERSION according to this table
+    OF16ext    1.6.0    010600    extend
+    fx31        1.6.1    010601    extend
+    fx32        1.6.2    010602    extend
+    fx30        1.6.3    010603    extend
+    fx41        1.6.4    010604    extend
+    of21x        2.1.0    020100    vanilla
+    of22x        2.2.0    020200    vanilla
+    of22eng    2.2.0    020200    engys
+    of23x        2.3.0    020300    vanilla
+    of24x        2.4.0    020400    vanilla
+    of301        3.0.1    030001    vanilla
+    ofplus        4.0.0    040000    esi
+    of1806        6.0.0    060000    esi
+    of1906        6.5.0    060500    esi
+    of2106        6.5.0    060500    esi
+    of2112        6.5.5    060505    esi
+    ofdev        7.0.0    070000    vanilla
 
-apt install libgsl-dev libvtk9-dev -y
 
-## libgsl-dev ... vtk-xxx/libvtkXXX-dev müssen installiert sein
-touch toolkit_export.h (keine Ahnung warum da eine leere Datei erstellt werden muss)
+10.7) if you have python3-paraview you should remove it
 
-(
-echo $WM_PROJECT_USER_DIR
-if it does not exsit creat it
-normally/home/mkh/OpenFOAM/"your computer name"-v2012
-)
+11.) touch toolkit_export.h
 
-cd OpenFOAM/"your openfoam user directory folder"/insightcae/src/addons/insight-inflowgenerator/extensions/openfoam/inflowGeneratorBC
-8.) wmake libso . Make.OF......
- please remember to change the vkt include in option in Make... directory
+12.) source OpenFOAM
+
+13.) "wmake libso . Make.OFxxxx_[...]"
  
+---------------------------------------------------------------------------------
+ 
+14.) if you get this error "fatal error: vtkSmartPointer.h: No such file or directory", you did not specify the correct vtk version in the "options" file
+    --> look into /usr/include/vtkx.x --> "wclean" --> repeat the wmake command
+     
+---------------------------------------------------------------------------------
 
-libs ("libinflowGeneratorBC.so"); //in controldict    
+Be sure to have "libs ("libinflowGeneratorBC.so");" in controlDict.
 
-Error :undefined symbol: wrapper2_dsyevd_
-solution: 
+---------------------------------------------------------------------------------
+# Test Case
 
+1.) blockMesh
 
-
-
-
-
+2.) Run the simulation using "solver    [...];".
 
 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
-
-
-CLUSTER Installation (for OpenFOAM v2106)
+# CLUSTER Installation (for OpenFOAM v2106)
 
 1.) download, copy into Thirdparty-v2106 and unpack "VTK-8.2.0"
         make sure that this is the mentioned version in OpenFOAM-v2106(etc/config.sh/VTK
